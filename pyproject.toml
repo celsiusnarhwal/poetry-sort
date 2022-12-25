@@ -17,7 +17,6 @@ sort = "poetry_sort.plugin:PoetrySortPlugin"
 sort-python = false
 format = true
 
-
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]

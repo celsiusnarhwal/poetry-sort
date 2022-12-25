@@ -17,7 +17,7 @@ poetry sort
 `poetry sort` supports the `--with`, `--without`, and `--only` options, which function identically to `poetry install`.
 For full usage information, run `poetry sort --help`.
 
-poetry-sort runs automatically whenever you run `poetry add` or `poetry init`, and will sort only the dependency
+poetry-sort runs automatically whenever you run `poetry add` or `poetry init` and will sort only the dependency
 groups that were modified by the command.
 
 
