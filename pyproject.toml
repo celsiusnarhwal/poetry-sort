@@ -13,10 +13,6 @@ poetry = "^1.2"
 [tool.poetry.plugins."poetry.application.plugin"]
 sort = "poetry_sort.plugin:PoetrySortPlugin"
 
-[tool.sort.config]
-sort-python = false
-format = true
-
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
