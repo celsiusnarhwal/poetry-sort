@@ -30,16 +30,16 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
             self.version = version
 
         def __eq__(self, other):
-            return self.name == other.name
+            return self.name.casefold() == other.name.casefold()
 
         def __gt__(self, other):
             return other < self
 
         def __lt__(self, other):
-            if not sort_config.get("sort-python") and "python" in [self.name, other.name]:
-                return self.name == "python" and other.name != "python"
+            if not sort_config.get("sort-python") and "python" in [self.name.casefold(), other.name.casefold()]:
+                return self.name.casefold() == "python" and other.name.casefold() != "python"
 
-            return self.name < other.name
+            return self.name.casefold() < other.name.casefold()
 
     def sort(dependencies: dict) -> dict:
         return {k: v for k, v in (sorted(dependencies.items(), key=lambda dep: Dependency(*dep)))}
