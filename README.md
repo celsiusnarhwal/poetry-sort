@@ -32,19 +32,21 @@ poetry-sort can be configured via a `tool.sort.config` section in your `pyprojec
 
 ```toml
 [tool.sort.config]
+case-sensitive = false
 sort-python = false
 format = true
 ```
 
 The following options are available:
 
-- `sort-python`: Whether to also sort the `python` dependency. If `false`, the `python` dependency will be placed at
-the top of `tool.poetry.dependencies`; if `true`, it will be sorted alphebetically with everything else.
-Defaults to `false`.
+- `case-sensitive` (`bool`, default: `false`): Whether to take case into account when sorting.
 
-- `format`: Whether to apply some basic formatting to `pyproject.toml` after sorting. If `true`, poetry-sort will
+- `sort-python` (`bool`, default: `false`): Whether to also sort the `python` dependency. If `false`, the `python` dependency will be placed at
+the top of `tool.poetry.dependencies`; if `true`, it will be sorted alphebetically with everything else.
+
+- `format` (`bool`, default: `true`): Whether to apply some basic formatting to `pyproject.toml` after sorting. If `true`, poetry-sort will
 take all occurences of three or more consecutive newlines in `pyproject.toml` and replace them with two newlines.
-If `false`, poetry-sort will not modify `pyproject.toml` beyond just sorting your dependencies. Defaults to `true`.
+If `false`, poetry-sort will not modify `pyproject.toml` beyond just sorting your dependencies.
 
 
 ## License

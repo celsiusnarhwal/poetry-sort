@@ -14,6 +14,7 @@ from poetry.plugins.application_plugin import ApplicationPlugin
 
 def get_plugin_config(poetry_file: TOMLFile):
     config = {
+        "case-sensitive": False,
         "sort-python": False,
         "format": True,
     }
@@ -26,20 +27,20 @@ def get_plugin_config(poetry_file: TOMLFile):
 def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
     class Dependency:
         def __init__(self, name: str, version: str):
-            self.name = name
+            self.name = name.casefold() if not sort_config.get("case-sensitive") else name
             self.version = version
 
         def __eq__(self, other):
-            return self.name.casefold() == other.name.casefold()
+            return self.name == other.name
 
         def __gt__(self, other):
             return other < self
 
         def __lt__(self, other):
-            if not sort_config.get("sort-python") and "python" in [self.name.casefold(), other.name.casefold()]:
-                return self.name.casefold() == "python" and other.name.casefold() != "python"
+            if not sort_config.get("sort-python") and "python" in [self.name, other.name]:
+                return self.name == "python" and other.name != "python"
 
-            return self.name.casefold() < other.name.casefold()
+            return self.name < other.name
 
     def sort(dependencies: dict) -> dict:
         return {k: v for k, v in (sorted(dependencies.items(), key=lambda dep: Dependency(*dep)))}
