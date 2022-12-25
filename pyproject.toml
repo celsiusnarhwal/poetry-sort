@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poetry-sort"
-version = "1.0.2"
+version = "1.1.0"
 description = "Alphabetically sort your Poetry dependencies"
 readme = "README.md"
 license = "MIT"
