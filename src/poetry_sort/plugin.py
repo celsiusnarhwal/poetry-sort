@@ -29,11 +29,14 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
             self.name = name
             self.version = version
 
+        def __eq__(self, other):
+            return self.name == other.name
+
         def __gt__(self, other):
             return other < self
 
         def __lt__(self, other):
-            if not sort_confg.get("sort-python") and "python" in [self.name, other.name]:
+            if not sort_config.get("sort-python") and "python" in [self.name, other.name]:
                 return self.name == "python" and other.name != "python"
 
             return self.name < other.name
@@ -41,7 +44,7 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
     def sort(dependencies: dict) -> dict:
         return {k: v for k, v in (sorted(dependencies.items(), key=lambda dep: Dependency(*dep)))}
 
-    sort_confg = get_plugin_config(cmd.poetry.file)
+    sort_config = get_plugin_config(cmd.poetry.file)
 
     pyproject = cmd.poetry.file.read()
     poetry = pyproject["tool"]["poetry"]
@@ -64,7 +67,7 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
 
     pyproject["tool"]["poetry"] = poetry
 
-    contents = re.sub(r"\n{3,}", "\n\n", pyproject.as_string()) if sort_confg.get("format") else pyproject.as_string()
+    contents = re.sub(r"\n{3,}", "\n\n", pyproject.as_string()) if sort_config.get("format") else pyproject.as_string()
     cmd.poetry.file.path.open("w").write(contents)
 
 
