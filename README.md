@@ -50,4 +50,4 @@ If `false`, poetry-sort will not modify `pyproject.toml` beyond just sorting you
 
 
 ## License
-poetry-sort is licensed udner the [MIT License](LICENSE.md).
+poetry-sort is licensed under the [MIT License](LICENSE.md).
