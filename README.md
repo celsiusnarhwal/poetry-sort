@@ -28,7 +28,8 @@ groups that were modified by the command.
 
 ## Configuration
 
-poetry-sort can be configured via a `tool.sort.config` section in your `pyproject.toml` file.
+poetry-sort can be configured either on a per-project basis in `pyproject.toml` or globally in your Poetry
+`config.toml` file. Either way, configuration options are placed inside the `tool.sort.config` key.
 
 ```toml
 [tool.sort.config]
@@ -37,6 +38,8 @@ case-sensitive = false
 sort-python = false
 format = true
 ```
+
+Settings defined in `pyroject.toml` will override settings defined in `config.toml`.
 
 The following options are available:
 
