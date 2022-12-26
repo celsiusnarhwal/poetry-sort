@@ -8,26 +8,32 @@ from poetry.console.application import Application
 from poetry.console.commands.add import AddCommand
 from poetry.console.commands.command import Command
 from poetry.console.commands.init import InitCommand
-from poetry.core.toml import TOMLFile
 from poetry.plugins.application_plugin import ApplicationPlugin
+from poetry.poetry import Poetry
+from pydantic import BaseModel, StrictBool
+from tomlkit import TOMLDocument
 
 
-def get_plugin_config(poetry_file: TOMLFile):
-    config = {
-        "case-sensitive": False,
-        "sort-python": False,
-        "format": True,
-    }
+class PluginConfig(BaseModel):
+    enabled: StrictBool = True
+    case_sensitive: StrictBool = False
+    sort_python: StrictBool = False
+    format: StrictBool = True
 
-    config.update(poetry_file.read().get("tool", {}).get("sort", {}).get("config", {}))
+    def __init__(self, poetry: Poetry):
+        def get_config(config: dict | TOMLDocument) -> dict:
+            return {k.replace("-", "_"): v for k, v in config.get("tool", {}).get("sort", {}).get("config", {}).items()}
 
-    return config
+        _config = get_config(poetry.config.config)
+        _config.update(get_config(poetry.file.read()))
+
+        super().__init__(**_config)
 
 
 def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
     class Dependency:
         def __init__(self, name: str, version: str):
-            self.name = name.casefold() if not sort_config.get("case-sensitive") else name
+            self.name = name.casefold() if not plugin_config.case_sensitive else name
             self.version = version
 
         def __eq__(self, other):
@@ -37,7 +43,7 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
             return other < self
 
         def __lt__(self, other):
-            if not sort_config.get("sort-python") and "python" in [self.name, other.name]:
+            if not plugin_config.sort_python and "python" in [self.name, other.name]:
                 return self.name == "python" and other.name != "python"
 
             return self.name < other.name
@@ -45,7 +51,10 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
     def sort(dependencies: dict) -> dict:
         return {k: v for k, v in (sorted(dependencies.items(), key=lambda dep: Dependency(*dep)))}
 
-    sort_config = get_plugin_config(cmd.poetry.file)
+    plugin_config = PluginConfig(cmd.poetry)
+
+    if not plugin_config.enabled:
+        return
 
     pyproject = cmd.poetry.file.read()
     poetry = pyproject["tool"]["poetry"]
@@ -68,7 +77,7 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
 
     pyproject["tool"]["poetry"] = poetry
 
-    contents = re.sub(r"\n{3,}", "\n\n", pyproject.as_string()) if sort_config.get("format") else pyproject.as_string()
+    contents = re.sub(r"\n{3,}", "\n\n", pyproject.as_string()) if plugin_config.format else pyproject.as_string()
     cmd.poetry.file.path.open("w").write(contents)
 
 
@@ -83,6 +92,10 @@ class PoetrySortCommand(Command):
     ]
 
     def handle(self) -> int:
+        if not PluginConfig(self.poetry).enabled:
+            self.line_error("poetry-sort is disabled.", style="error")
+            return 1
+
         sort_dependencies(
             cmd=self,
             include=self.option("with"),
