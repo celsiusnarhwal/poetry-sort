@@ -15,7 +15,7 @@ from tomlkit import TOMLDocument
 
 
 class PluginConfig(BaseModel):
-    enabled: StrictBool = True
+    auto: StrictBool = True
     case_sensitive: StrictBool = False
     sort_python: StrictBool = False
     format: StrictBool = True
@@ -30,7 +30,7 @@ class PluginConfig(BaseModel):
         super().__init__(**_config)
 
 
-def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
+def sort_dependencies(cmd: Command, include: list, exclude: list, only: list, auto_triggered: bool = False):
     class Dependency:
         def __init__(self, name: str, version: str):
             self.name = name.casefold() if not plugin_config.case_sensitive else name
@@ -53,7 +53,7 @@ def sort_dependencies(cmd: Command, include: list, exclude: list, only: list):
 
     plugin_config = PluginConfig(cmd.poetry)
 
-    if not plugin_config.enabled:
+    if auto_triggered and not plugin_config.auto:
         return
 
     pyproject = cmd.poetry.file.read()
@@ -92,10 +92,6 @@ class PoetrySortCommand(Command):
     ]
 
     def handle(self) -> int:
-        if not PluginConfig(self.poetry).enabled:
-            self.line_error("poetry-sort is disabled.", style="error")
-            return 1
-
         sort_dependencies(
             cmd=self,
             include=self.option("with"),
@@ -132,4 +128,5 @@ class PoetrySortPlugin(ApplicationPlugin):
             include=[],
             exclude=[],
             only=groups,
+            auto_triggered=True,
         )

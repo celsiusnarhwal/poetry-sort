@@ -16,7 +16,7 @@ pydantic = "^1.10.2"
 sort = "poetry_sort.plugin:PoetrySortPlugin"
 
 [tool.sort.config]
-enabled = true
+auto = true
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
