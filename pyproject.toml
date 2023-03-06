@@ -1,22 +1,28 @@
 [tool.poetry]
 name = "poetry-sort"
-version = "1.2.0"
+version = "2.0.0"
 description = "Alphabetically sort your Poetry dependencies"
 readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/celsiusnarhwal/poetry-sort"
 authors = ["celsius narhwal <hello@celsiusnarhwal.dev>"]
+keywords = ["poetry", "sort", "dependencies"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
+dict-deep = "^4.1.2"
 poetry = "^1.2"
 pydantic = "^1.10.2"
 
 [tool.poetry.plugins."poetry.application.plugin"]
 sort = "poetry_sort.plugin:PoetrySortPlugin"
 
-[tool.sort.config]
-auto = true
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
