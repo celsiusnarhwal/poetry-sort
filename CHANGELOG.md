@@ -14,8 +14,9 @@ poetry-sort adheres to [semantic versioning](https://semver.org/spec/v2.0.0.html
 ### Changed
 
 - poetry-sort is now configured via the `tool.poetry-sort` section of `pyproject.toml` instead of `tool.sort.config`.
-- The values for settings in `tool.poetry-sort` are no longer _strictly_ required to be booleans as long as
+- The values for settings in `tool.poetry-sort` are no longer *strictly* required to be booleans as long as
   [Pydantic](https://docs.pydantic.dev) can coerce them to booleans.
+- poetry-sort now supports Python 3.8 and later. It previously only supported Python 3.10 and later.
 
 ### Removed
 
