@@ -57,4 +57,4 @@ The following options are available:
 
 ## License
 
-poetry-sort is licensed udner the [MIT License](LICENSE.md).
+poetry-sort is licensed under the [MIT License](https://github.com/celsiusnarhwal/poetry-sort/blob/main/LICENSE.md).
