@@ -29,10 +29,10 @@ groups that were modified by the command.
 
 ## Configuration
 
-You can configure poetry-sort via the `tool.poetry.sort` section of `pyproject.toml`.
+You can configure poetry-sort via the `tool.poetry-sort` section of `pyproject.toml`.
 
 ```toml
-[tool.sort.config]
+[tool.poetry-sort]
 auto = true
 case-sensitive = false
 sort-python = false
